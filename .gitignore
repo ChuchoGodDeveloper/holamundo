@@ -1,0 +1,18 @@
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Rails
+/log/*
+/tmp/*
+/public/assets
+.env
+/db/*.sqlite3
+/.bundle/
+/vendor/bundle/
+
+# Archivos problematicos de Android/Gradle (El error que tenías)
+.gradle/
+/android/
+/ios/
+/node_modules/

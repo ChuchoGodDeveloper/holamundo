@@ -1,0 +1,10 @@
+<h1>Iniciar Sesión</h1>
+
+<%= form_with url: '/login', data: { turbo: false }, local: true do |form| %>
+
+  <p>Demuestra que eres humano:</p>
+  <%= recaptcha_tags %>
+  <br>
+  <%= form.submit "Entrar al Sistema" %>
+
+<% end %>
