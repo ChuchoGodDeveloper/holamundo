@@ -1,3 +1,9 @@
+<% content_for :ruta_navegacion do %>
+  <%= link_to "Inicio", root_path, class: "crumb-link" %>
+  <span class="crumb-separator">❯</span>
+  <span class="crumb-current">Nuevo Registro</span>
+<% end %>
+
 <style>
   .registro-container {
     max-width: 500px;

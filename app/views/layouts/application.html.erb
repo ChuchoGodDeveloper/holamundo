@@ -21,9 +21,84 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <style>
+    <style>
+    /* --- BARRA DE NAVEGACIÓN MODERNA --- */
+    
+    /* 1. La cinta que cruza toda la pantalla */
+    .breadcrumb-bar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #eaecf0; /* Línea sutil abajo */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* Sombra muy suave */
+      padding: 12px 0;
+      width: 100%;
+      margin-bottom: 30px; /* Empuja el contenido hacia abajo */
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 2. El contenedor que centra el texto */
+    .breadcrumb-container {
+      max-width: 900px; /* Ancho máximo igual al de tu formulario */
+      margin: 0 auto;   /* Centrado automático */
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+    }
+
+    /* 3. Los enlaces (Links) */
+    .crumb-link {
+      text-decoration: none;
+      color: #4b5563; /* Gris oscuro */
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .crumb-link:hover {
+      background-color: #f3f4f6; /* Gris muy clarito al pasar el mouse */
+      color: #2563eb; /* Azul al pasar el mouse */
+    }
+
+    /* 4. La flechita separadora */
+    .crumb-separator {
+      color: #9ca3af;
+      margin: 0 4px;
+      font-size: 10px;
+    }
+
+    /* 5. La ubicación actual (Estilo Cápsula/Píldora) */
+    .crumb-current {
+      background-color: #eff6ff; /* Fondo azul muy pálido */
+      color: #1d4ed8;            /* Texto azul fuerte */
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 99px;       /* Bordes totalmente redondos */
+      border: 1px solid #dbeafe;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+  </style>
   </head>
 
   <body>
-    <%= yield %>
-  </body>
-</html>
+  
+  <% if content_for?(:ruta_navegacion) %>
+    <div class="breadcrumb-bar">
+      <div class="breadcrumb-container">
+        <span style="font-size: 16px; margin-right: 8px;">🏠</span> 
+        
+        <%= yield :ruta_navegacion %>
+      </div>
+    </div>
+  <% end %>
+  <%= yield %>
+
+</body>

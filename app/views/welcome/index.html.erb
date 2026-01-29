@@ -1,3 +1,11 @@
+<% content_for :ruta_navegacion do %>
+  <%= link_to "Inicio", root_path, class: "crumb-link" %>
+  <span class="crumb-separator">❯</span>
+  <%= link_to "Registro", new_registro_path, class: "crumb-link" %>
+  <span class="crumb-separator">❯</span>
+  <span class="crumb-current">Ticket Generado</span>
+<% end %>
+
 <% if flash[:registro_id] %>
   <% @ultimo_registro = Registro.find_by(id: flash[:registro_id]) %>
 <% end %>

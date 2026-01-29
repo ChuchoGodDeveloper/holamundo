@@ -1,3 +1,7 @@
+<% content_for :ruta_navegacion do %>
+  <span class="crumb-current">Inicio (Captcha)</span>
+<% end %>
+
 <h1>Iniciar Sesión</h1>
 
 <%= form_with url: '/login', data: { turbo: false }, local: true do |form| %>
