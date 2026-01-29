@@ -1,4 +1,4 @@
-# Configuración base (solo para tu PC)
+# Configuración base
 default: &default
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -13,8 +13,7 @@ test:
   database: storage/test.sqlite3
 
 # PRODUCCIÓN (RENDER + RAILS 8)
-# Aquí definimos 3 conexiones (Primary, Cache, Queue) 
-# pero todas usan la misma URL de Render.
+# Fíjate que ahora definimos 3 bloques: primary, cache y queue
 production:
   primary: &primary_production
     adapter: postgresql
