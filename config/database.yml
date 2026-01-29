@@ -14,6 +14,7 @@ test:
 
 # PRODUCCIÓN (RENDER + RAILS 8)
 # Fíjate que ahora definimos 3 bloques: primary, cache y queue
+# PRODUCCIÓN (RENDER + RAILS 8)
 production:
   primary: &primary_production
     adapter: postgresql
@@ -23,12 +24,9 @@ production:
   
   cache:
     <<: *primary_production
-    migrations_paths: db/cache_migrate
     
   queue:
     <<: *primary_production
-    migrations_paths: db/queue_migrate
     
   cable:
     <<: *primary_production
-    migrations_paths: db/cable_migrate
