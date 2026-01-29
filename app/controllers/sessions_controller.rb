@@ -1,12 +1,17 @@
 class SessionsController < ApplicationController
   def new
+    # Esto solo muestra la pantalla de Login
   end
 
   def create
+    # Aquí Rails verifica si el usuario resolvió el rompecabezas
     if verify_recaptcha
-      redirect_to root_path
+      # SI ES HUMANO: Lo mandamos al formulario de registro que creamos
+      redirect_to new_registro_path, notice: "¡Verificación exitosa! Bienvenido."
     else
-      render :new
+      # SI FALLA: Le mostramos error y volvemos a cargar la página
+      flash.now[:alert] = "Error de verificación. Por favor demuestra que eres humano."
+      render :new, status: :unprocessable_entity
     end
   end
 end

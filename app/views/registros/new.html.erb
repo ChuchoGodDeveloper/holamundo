@@ -1,0 +1,105 @@
+<style>
+  .registro-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    font-family: sans-serif;
+    border: 1px solid #e0e0e0;
+  }
+  .registro-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
+  .alerta-error {
+    background-color: #fff5f5;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .alerta-error h4 { margin-top: 0; margin-bottom: 10px; }
+  .alerta-error ul { margin: 0; padding-left: 20px; }
+  .campo { margin-bottom: 15px; }
+  .etiqueta {
+    display: block; margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 14px;
+  }
+  .input-box {
+    width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px;
+    transition: all 0.3s ease; box-sizing: border-box; 
+  }
+  .input-box:focus { border-color: #3182ce; outline: none; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2); }
+  .btn-enviar {
+    width: 100%; padding: 12px; background-color: #3182ce; color: white; border: none;
+    border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px;
+    transition: background-color 0.2s;
+  }
+  .btn-enviar:hover { background-color: #2b6cb0; }
+</style>
+
+<div class="registro-container">
+  <h2 class="registro-title">Registro de Usuario</h2>
+
+  <%= form_with model: @registro, url: registros_path, method: :post, local: true do |form| %>
+
+    <% if @registro.errors.any? %>
+      <div class="alerta-error">
+        <h4>⚠️ Por favor corrige lo siguiente:</h4>
+        <ul>
+          <% @registro.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="campo">
+      <%= form.label :nombre, "Nombre", class: "etiqueta" %>
+      <%= form.text_field :nombre, class: "input-box", placeholder: "Tu nombre" %>
+    </div>
+
+    <div class="campo">
+      <%= form.label :apellido, "Apellido", class: "etiqueta" %>
+      <%= form.text_field :apellido, class: "input-box", placeholder: "Tu apellido" %>
+    </div>
+
+    <div class="campo">
+      <%= form.label :fecha_nacimiento, "Fecha de nacimiento", class: "etiqueta" %>
+      <%= form.date_field :fecha_nacimiento, class: "input-box" %>
+    </div>
+
+    <div class="campo">
+      <%= form.label :localidad, "Localidad", class: "etiqueta" %>
+      <%= form.text_field :localidad, class: "input-box", placeholder: "Ciudad o Municipio" %>
+    </div>
+
+    <div class="campo">
+      <%= form.label :email, "Correo electrónico", class: "etiqueta" %>
+      <%= form.email_field :email, class: "input-box", placeholder: "ejemplo@correo.com" %>
+    </div>
+
+    <div class="campo">
+      <%= form.label :telefono, "Número de teléfono móvil", class: "etiqueta" %>
+      <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678" %>
+    </div>
+
+    <div class="campo" style="background: #f7fafc; padding: 10px; border-radius: 5px; border: 1px dashed #cbd5e0;">
+      <%= form.label :fotos, "Subir 3 Evidencias (Selecciónalas juntas)", class: "etiqueta" %>
+      
+      <%= form.file_field :fotos, multiple: true, class: "input-box", accept: 'image/png,image/gif,image/jpeg' %>
+      
+      <small style="color: #666; display: block; margin-top: 5px;">
+        💡 Tip: Mantén presionada la tecla <strong>Ctrl</strong> para seleccionar las 3 fotos al mismo tiempo.
+      </small>
+    </div>
+
+    <%= form.submit "Enviar Datos", class: "btn-enviar" %>
+
+  <% end %> 
+</div>

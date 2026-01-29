@@ -1,6 +1,99 @@
-<h1>Hola Mundo desde Ruby on Rails</h1>
-<p>Esta es mi primera página web.</p>
-<p>¡Bienvenido al sistema!</p>
+<% if flash[:registro_id] %>
+  <% @ultimo_registro = Registro.find_by(id: flash[:registro_id]) %>
+<% end %>
 
-<br>
-<%= link_to "Iniciar Sesión", login_path %>
+<h1 style="text-align:center;">Bienvenido a Hola Mundo</h1>
+<p style="text-align:center;">Esta es la página de inicio del sistema.</p>
+
+<% if @ultimo_registro %>
+
+  <br><hr><br>
+
+  <style>
+    /* Estilos del Carrusel */
+    .carrusel-marco {
+      width: 100%; max-width: 600px; height: 300px;
+      margin: 0 auto 30px auto; overflow: hidden;
+      border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      border: 4px solid #fff; position: relative; background: #333;
+    }
+    .carrusel-tira { display: flex; width: 300%; height: 100%; animation: moverCarrusel 12s infinite ease-in-out; }
+    .carrusel-item { 
+      width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; 
+      overflow: hidden; background: #000;
+    }
+    .carrusel-item img { width: 100%; height: 100%; object-fit: cover; }
+    @keyframes moverCarrusel {
+      0%, 30% { margin-left: 0; } 33%, 63% { margin-left: -100%; } 66%, 96% { margin-left: -200%; } 100% { margin-left: 0; }
+    }
+
+    /* Estilos del Ticket */
+    .ticket-container {
+      background-color: #fff; border: 2px dashed #333; width: 350px;
+      margin: 0 auto; padding: 20px; font-family: 'Courier New', Courier, monospace;
+      box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+    }
+    .ticket-item { margin-bottom: 8px; font-size: 14px; display: flex; justify-content: space-between; }
+    
+    /* Estilo para la foto dentro del ticket */
+    .ticket-foto { text-align: center; margin-top: 15px; margin-bottom: 15px; border-top: 1px dashed #ccc; padding-top: 10px; }
+    .ticket-foto img { max-width: 100%; max-height: 150px; border-radius: 5px; border: 1px solid #ddd; }
+    
+    .mensaje-exito { 
+      background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; 
+      text-align: center; font-weight: bold; margin-top: 20px; max-width: 500px; margin-left: auto; margin-right: auto; 
+    }
+  </style>
+
+
+  <div class="carrusel-marco">
+    <div class="carrusel-tira">
+      <% if @ultimo_registro.fotos.attached? %>
+        <% @ultimo_registro.fotos.first(3).each do |foto| %>
+          <div class="carrusel-item">
+            <%= image_tag foto %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="carrusel-item" style="color:white;">Sin fotos</div>
+      <% end %>
+    </div>
+  </div>
+
+
+  <div class="ticket-container">
+    <div style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px;">
+      <h3>TICKET OFICIAL</h3>
+      <small>ID: #<%= @ultimo_registro.id %> | <%= Time.now.strftime("%d/%m/%Y") %></small>
+    </div>
+
+    <div class="ticket-item"><span>Nombre:</span> <strong><%= @ultimo_registro.nombre %></strong></div>
+    <div class="ticket-item"><span>Apellido:</span> <strong><%= @ultimo_registro.apellido %></strong></div>
+    <div class="ticket-item"><span>F. Nac:</span> <span><%= @ultimo_registro.fecha_nacimiento %></span></div>
+    <div class="ticket-item"><span>Localidad:</span> <span><%= @ultimo_registro.localidad %></span></div>
+    <div class="ticket-item"><span>Email:</span> <small><%= @ultimo_registro.email %></small></div>
+    <div class="ticket-item"><span>Tel:</span> <span><%= @ultimo_registro.telefono %></span></div>
+
+    <div class="ticket-foto">
+      <div>EVIDENCIA PRINCIPAL:</div>
+      <% if @ultimo_registro.fotos.attached? %>
+        <%= image_tag @ultimo_registro.fotos.first %>
+      <% else %>
+        <p>[Sin imagen]</p>
+      <% end %>
+    </div>
+
+    <div style="text-align: center;">**********************</div>
+  </div>
+
+  <div class="mensaje-exito">
+    ✅ <%= flash[:mensaje_exito] %>
+  </div>
+
+<% else %>
+  
+  <div style="text-align: center; margin-top: 50px;">
+    <%= link_to "Ir a Login / Registro", root_path, style: "background: #333; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" %>
+  </div>
+
+<% end %>

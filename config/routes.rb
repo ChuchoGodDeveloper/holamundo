@@ -1,7 +1,15 @@
 Rails.application.routes.draw do
-  # Esto le dice a Rails que la página principal es tu "Hola Mundo"
-  root 'welcome#index'
+  # 1. ESTO HACE QUE ARRANQUE EN EL CAPTCHA (Login)
+  root "sessions#new"
 
-  get 'login', to: 'sessions#new'
-  post 'login', to: 'sessions#create'
+  # 2. Rutas para el Login y Captcha
+  post '/login', to: 'sessions#create'
+
+  # 3. Ruta para tu pantalla final (Hola Mundo + Ticket)
+  # Le ponemos el nombre 'inicio' para poder llamarla después
+  get 'inicio', to: 'welcome#index', as: 'inicio'
+
+  # 4. Rutas para el Formulario de Registro
+  get 'registro', to: 'registros#new', as: 'new_registro'
+  post 'registros', to: 'registros#create' # Acción estándar REST
 end
