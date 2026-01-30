@@ -1,7 +1,9 @@
 <% content_for :ruta_navegacion do %>
   <%= link_to "Inicio", root_path, class: "crumb-link" %>
   <span class="crumb-separator">❯</span>
-  <span class="crumb-current">Nuevo Registro</span>
+  <span class="crumb-current">
+    <%= @registro.new_record? ? "Nuevo Registro" : "Editar Registro" %>
+  </span>
 <% end %>
 
 <style>
@@ -47,12 +49,22 @@
     transition: background-color 0.2s;
   }
   .btn-enviar:hover { background-color: #2b6cb0; }
+  
+  /* Estilo simple para las miniaturas de fotos existentes */
+  .miniaturas-container {
+    display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .miniatura {
+    width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;
+  }
 </style>
 
 <div class="registro-container">
-  <h2 class="registro-title">Registro de Usuario</h2>
+  <h2 class="registro-title">
+    <%= @registro.new_record? ? "Registro de Usuario" : "Editar Datos" %>
+  </h2>
 
-  <%= form_with model: @registro, url: registros_path, method: :post, local: true do |form| %>
+  <%= form_with model: @registro, local: true do |form| %>
 
     <% if @registro.errors.any? %>
       <div class="alerta-error">
@@ -67,22 +79,26 @@
 
     <div class="campo">
       <%= form.label :nombre, "Nombre", class: "etiqueta" %>
-      <%= form.text_field :nombre, class: "input-box", placeholder: "Tu nombre" %>
+      <%= form.text_field :nombre, class: "input-box", placeholder: "Tu nombre", maxlength: 50 %>
     </div>
 
     <div class="campo">
       <%= form.label :apellido, "Apellido", class: "etiqueta" %>
-      <%= form.text_field :apellido, class: "input-box", placeholder: "Tu apellido" %>
+      <%= form.text_field :apellido, class: "input-box", placeholder: "Tu apellido", maxlength: 50 %>
     </div>
 
     <div class="campo">
       <%= form.label :fecha_nacimiento, "Fecha de nacimiento", class: "etiqueta" %>
-      <%= form.date_field :fecha_nacimiento, class: "input-box" %>
+      <%= form.date_field :fecha_nacimiento, 
+            class: "input-box", 
+            max: 10.years.ago.to_date,
+            min: 100.years.ago.to_date %>
+      <small style="color: #666; font-size: 0.8em;">Debes ser mayor de 10 años.</small>
     </div>
 
     <div class="campo">
       <%= form.label :localidad, "Localidad", class: "etiqueta" %>
-      <%= form.text_field :localidad, class: "input-box", placeholder: "Ciudad o Municipio" %>
+      <%= form.text_field :localidad, class: "input-box", placeholder: "Ciudad o Municipio", maxlength: 100 %>
     </div>
 
     <div class="campo">
@@ -92,20 +108,30 @@
 
     <div class="campo">
       <%= form.label :telefono, "Número de teléfono móvil", class: "etiqueta" %>
-      <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678" %>
+      <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678", maxlength: 10 %>
     </div>
 
-    <div class="campo" style="background: #f7fafc; padding: 10px; border-radius: 5px; border: 1px dashed #cbd5e0;">
-      <%= form.label :fotos, "Subir 3 Evidencias (Selecciónalas juntas)", class: "etiqueta" %>
+    <div class="campo" style="background: #f7fafc; padding: 15px; border-radius: 5px; border: 1px dashed #cbd5e0;">
       
-      <%= form.file_field :fotos, multiple: true, class: "input-box", accept: 'image/png,image/gif,image/jpeg' %>
+      <% if @registro.fotos.attached? %>
+        <p class="etiqueta">📸 Evidencias actuales (<%= @registro.fotos.count %>):</p>
+        <div class="miniaturas-container">
+          <% @registro.fotos.each do |foto| %>
+            <%= image_tag foto, class: "miniatura" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= form.label :fotos, "Agregar evidencia (Foto)", class: "etiqueta" %>
+      
+      <%= form.file_field :fotos, class: "input-box", accept: 'image/png,image/gif,image/jpeg' %>
       
       <small style="color: #666; display: block; margin-top: 5px;">
-        💡 Tip: Mantén presionada la tecla <strong>Ctrl</strong> para seleccionar las 3 fotos al mismo tiempo.
+        Sube una foto a la vez. Formatos: JPG o PNG.
       </small>
     </div>
 
-    <%= form.submit "Enviar Datos", class: "btn-enviar" %>
+    <%= form.submit "Guardar Datos", class: "btn-enviar" %>
 
   <% end %> 
 </div>
