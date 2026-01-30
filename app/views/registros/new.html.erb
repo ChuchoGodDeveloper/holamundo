@@ -49,14 +49,6 @@
     transition: background-color 0.2s;
   }
   .btn-enviar:hover { background-color: #2b6cb0; }
-  
-  /* Estilo simple para las miniaturas de fotos existentes */
-  .miniaturas-container {
-    display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
-  }
-  .miniatura {
-    width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;
-  }
 </style>
 
 <div class="registro-container">
@@ -111,27 +103,7 @@
       <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678", maxlength: 10 %>
     </div>
 
-    <div class="campo" style="background: #f7fafc; padding: 15px; border-radius: 5px; border: 1px dashed #cbd5e0;">
-      
-      <% if @registro.fotos.attached? %>
-        <p class="etiqueta">📸 Evidencias actuales (<%= @registro.fotos.count %>):</p>
-        <div class="miniaturas-container">
-          <% @registro.fotos.each do |foto| %>
-            <%= image_tag foto, class: "miniatura" %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%= form.label :fotos, "Agregar evidencia (Foto)", class: "etiqueta" %>
-      
-      <%= form.file_field :fotos, class: "input-box", accept: 'image/png,image/gif,image/jpeg' %>
-      
-      <small style="color: #666; display: block; margin-top: 5px;">
-        Sube una foto a la vez. Formatos: JPG o PNG.
-      </small>
-    </div>
-
-    <%= form.submit "Guardar Datos", class: "btn-enviar" %>
+    <%= form.submit "Guardar y Continuar a Fotos", class: "btn-enviar" %>
 
   <% end %> 
 </div>
