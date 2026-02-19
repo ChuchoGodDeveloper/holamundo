@@ -1,57 +1,39 @@
-class RegistrosController < ApplicationController
-  # Solo necesitamos buscar el registro para actualizar la foto (update)
-  before_action :set_registro, only: %i[ update ]
-
-  # GET /registros/new
-  def new
-    @registro = Registro.new
-  end
-
-  # POST /registros
-  def create
-    @registro = Registro.new(registro_params)
-
-    if @registro.save
-      # 1. GUARDAMOS EL ID EN LA SESIÓN (Para que el Ticket sepa quién es)
-      session[:registro_id] = @registro.id
-
-      # 2. REDIRIGIMOS AL INICIO (Ticket) en lugar de al perfil
-      # Esto soluciona el error "No template found"
-      redirect_to inicio_path, notice: "Datos guardados. Ahora sube tu evidencia."
-    else
-      render :new, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /registros/1
+# PATCH/PUT /registros/1
   def update
-    # Lógica para subir fotos una por una DESDE EL INDEX
+    # 1. Separamos la foto de los datos de texto
     nueva_foto = registro_params[:fotos]
+    datos_sin_foto = registro_params.except(:fotos)
 
-    # Preparamos los datos sin la foto por seguridad
-    parametros_sin_foto = registro_params.except(:fotos)
+    # 2. Primero intentamos guardar los cambios de texto (Nombre, Teléfono, etc.)
+    if @registro.update(datos_sin_foto)
 
-    if @registro.update(parametros_sin_foto)
-      # Si subió una foto, la adjuntamos a las que ya tiene (sin borrar las anteriores)
+      # CASO A: El usuario subió una foto nueva
       if nueva_foto.present?
+        # Adjuntamos la foto temporalmente
         @registro.fotos.attach(nueva_foto)
+
+        # 3. ¡VALIDACIÓN DE SEGURIDAD! 🛡️
+        # Preguntamos al Modelo si todo está bien (incluyendo el formato de imagen)
+        unless @registro.valid?
+          # SI FALLA: Borramos inmediatamente el archivo inválido del servidor
+          @registro.fotos.last.purge
+          
+          # Avisamos al usuario del error específico
+          mensaje_error = @registro.errors.full_messages.join(", ")
+          redirect_to inicio_path, alert: "❌ Error: #{mensaje_error}"
+          return # Importante: Detenemos todo aquí
+        end
+
+        # SI PASA: Todo bien
+        redirect_to inicio_path, notice: "✅ Evidencia agregada correctamente."
+
+      # CASO B: Solo se actualizaron textos (desde el panel de admin)
+      else
+        redirect_to registros_path, notice: "Datos actualizados correctamente."
       end
 
-      # AL ACTUALIZAR, NOS QUEDAMOS EN EL INDEX (Ticket)
-      redirect_to inicio_path, notice: "Evidencia agregada correctamente."
     else
-      redirect_to inicio_path, alert: "Error al subir la foto."
+      # Si falló la validación de los datos de texto (ej: nombre vacío)
+      render :edit, status: :unprocessable_entity
     end
   end
-
-  private
-
-  def set_registro
-    @registro = Registro.find(params[:id])
-  end
-
-  def registro_params
-    # Permitimos datos normales y la foto (sin corchetes, porque es una por una)
-    params.require(:registro).permit(:nombre, :apellido, :fecha_nacimiento, :localidad, :email, :telefono, :fotos)
-  end
-end

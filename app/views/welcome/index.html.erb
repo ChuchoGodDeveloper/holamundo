@@ -114,9 +114,15 @@
   <div class="upload-area">
     <h3 style="margin-top:0;">📸 Agregar Evidencia</h3>
     
+    <% if flash[:alert] %>
+      <div style="background-color: #ffe6e6; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-weight: bold;">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
     <%= form_with model: @registro, url: registro_path(@registro), method: :patch, local: true do |form| %>
       <div style="margin-bottom: 10px;">
-        <%= form.file_field :fotos, class: "form-control", accept: 'image/png,image/jpg,image/jpeg' %>
+        <%= form.file_field :fotos, class: "form-control", accept: 'image/png,image/jpg,image/jpeg,image/gif,image/webp' %>
       </div>
       <%= form.submit "Subir Foto", class: "btn-subir" %>
     <% end %>

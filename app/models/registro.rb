@@ -3,7 +3,6 @@ class Registro < ApplicationRecord
   has_many_attached :fotos
 
   # --- VALIDACIONES DE TEXTO ---
-  # El 'maximum' aquí asegura que el servidor proteja el límite de caracteres
   validates :nombre, presence: { message: "no puede estar vacío" }, 
             length: { maximum: 50 }, 
             format: { with: /\A[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+\z/, message: "solo permite letras" }
@@ -39,23 +38,27 @@ class Registro < ApplicationRecord
     if fecha_nacimiento > Date.today
       errors.add(:fecha_nacimiento, "no puede estar en el futuro")
     
-    # Debe tener al menos 10 años (Nació ANTES de hace 10 años)
+    # Debe tener al menos 10 años
     elsif fecha_nacimiento > 10.years.ago.to_date
       errors.add(:fecha_nacimiento, "debes tener al menos 10 años para registrarte")
     
-    # Coherencia: Que no tenga más de 100 años (ajustable)
+    # Coherencia: Que no tenga más de 100 años
     elsif fecha_nacimiento < 100.years.ago.to_date
       errors.add(:fecha_nacimiento, "año de nacimiento no válido (demasiado antiguo)")
     end
   end
 
-  # 2. Validación solo de formato (permitimos guardar 1, 2 o 3 fotos)
+  # 2. Validación estricta de formato
   def validar_formato_imagenes
-    return unless fotos.attached? # Si no hay fotos, no valida nada (permite guardar sin fotos al inicio)
+    return unless fotos.attached?
+
+    # Lista blanca de formatos permitidos (MIME types)
+    # Al usar esta lista, automáticamente se bloquean PDFs, Docs, EXE, etc.
+    tipos_permitidos = %w[image/jpeg image/jpg image/png image/gif image/webp]
 
     fotos.each do |foto|
-      unless foto.content_type.in?(%w(image/jpeg image/png image/jpg))
-        errors.add(:fotos, 'solo se permiten archivos JPG o PNG')
+      unless tipos_permitidos.include?(foto.content_type)
+        errors.add(:fotos, 'no válida. Solo se aceptan archivos de imagen (JPG, PNG, GIF, WEBP)')
       end
     end
   end

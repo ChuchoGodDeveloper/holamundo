@@ -71,12 +71,14 @@
 
     <div class="campo">
       <%= form.label :nombre, "Nombre", class: "etiqueta" %>
-      <%= form.text_field :nombre, class: "input-box", placeholder: "Tu nombre", maxlength: 50 %>
+      <%= form.text_field :nombre, class: "input-box", placeholder: "Tu nombre", maxlength: 50,
+          oninput: "this.value = this.value.replace(/[0-9]/g, '')" %>
     </div>
 
     <div class="campo">
       <%= form.label :apellido, "Apellido", class: "etiqueta" %>
-      <%= form.text_field :apellido, class: "input-box", placeholder: "Tu apellido", maxlength: 50 %>
+      <%= form.text_field :apellido, class: "input-box", placeholder: "Tu apellido", maxlength: 50,
+          oninput: "this.value = this.value.replace(/[0-9]/g, '')" %>
     </div>
 
     <div class="campo">
@@ -90,7 +92,8 @@
 
     <div class="campo">
       <%= form.label :localidad, "Localidad", class: "etiqueta" %>
-      <%= form.text_field :localidad, class: "input-box", placeholder: "Ciudad o Municipio", maxlength: 100 %>
+      <%= form.text_field :localidad, class: "input-box", placeholder: "Ciudad o Municipio", maxlength: 100,
+          oninput: "this.value = this.value.replace(/[0-9]/g, '')" %>
     </div>
 
     <div class="campo">
@@ -100,7 +103,8 @@
 
     <div class="campo">
       <%= form.label :telefono, "Número de teléfono móvil", class: "etiqueta" %>
-      <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678", maxlength: 10 %>
+      <%= form.telephone_field :telefono, class: "input-box", placeholder: "55 1234 5678", maxlength: 10,
+          oninput: "this.value = this.value.replace(/[^0-9]/g, '')" %>
     </div>
 
     <%= form.submit "Guardar y Continuar a Fotos", class: "btn-enviar" %>
